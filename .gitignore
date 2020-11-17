@@ -27,3 +27,7 @@ target/
 *.~lock*
 .~lock*
 */.~lock*
+
+# Intellij
+.DS_Store
+.idea
