@@ -31,3 +31,6 @@ target/
 # Intellij
 .DS_Store
 .idea
+
+# pdf
+.pdf
