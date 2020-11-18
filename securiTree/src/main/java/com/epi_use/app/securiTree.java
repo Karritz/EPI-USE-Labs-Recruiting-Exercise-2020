@@ -1,9 +1,6 @@
 package com.epi_use.app;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +55,7 @@ public class securiTree {
     }
 
     public static void login() {
+        Console console = System.console();
         JSONParser jsonParser = new JSONParser();
         try(FileReader reader = new FileReader("registered_users.json")) {
             //read the json file
@@ -72,7 +70,8 @@ public class securiTree {
                 System.out.print("Username: ");
                 String username = input();
                 System.out.print("Password: ");
-                String password = input();
+                char[] passwordChar = console.readPassword();
+                String password = new String(passwordChar);
                 user = new User(username, password.hashCode());
                 userList.forEach(u -> {
                     if (u.getUsername().equals(user.getUsername())) {
