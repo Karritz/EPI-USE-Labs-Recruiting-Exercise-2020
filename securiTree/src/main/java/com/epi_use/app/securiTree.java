@@ -1,10 +1,9 @@
 package com.epi_use.app;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
+import java.util.concurrent.atomic.AtomicInteger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -34,7 +33,7 @@ public class securiTree {
         switch (resp){
             case "1":
                 System.out.println("the tree");
-                displayTree();
+                displayTree(areaList.get(0), 0);
                 System.out.println("press enter to go back to homepage");
                 input();
                 homepage();
@@ -74,8 +73,35 @@ public class securiTree {
         }
     }
 
-    private static void displayTree() {
+    private static void displayTree(Area root, int depth) {
+        String tab = "\t";
+        int index = 0;
+        System.out.println(strRepeat(tab, depth) + " " + root.getName());
+        System.out.println(strRepeat(tab, depth) + " doors");
+        System.out.println(strRepeat(tab, depth)+ " rules");
+        if (root.getChild_area_ids().length != 0) {
+            for (int i = 0; i < root.getChild_area_ids().length; i++) {
+                    index = areaIndex(root.getChild_area_ids()[i]);
+                    displayTree(areaList.get(index), depth + 1);
+            }
+        }
+    }
 
+    private static String strRepeat(String str, int n) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            builder.append(str);
+        }
+        return builder.toString();
+    }
+
+    private static int areaIndex(String id) {
+        for (int i = 0; i < areaList.size(); i++) {
+            if (areaList.get(i).getId().equals(id)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public static String input() throws IOException {
@@ -117,11 +143,28 @@ public class securiTree {
             JSONObject systemData = (JSONObject) fullData.get("system_data");
             JSONArray doors = (JSONArray) systemData.get("doors");
             JSONArray areas = (JSONArray) systemData.get("areas");
+            JSONArray accessRules = (JSONArray) systemData.get("access_rules");
             areas.forEach(area -> parseAreas((JSONObject) area));
             doors.forEach(door -> parseDoors((JSONObject) door));
+            accessRules.forEach(rule -> parseRule((JSONObject) rule));
 
         } catch (ParseException | IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void parseRule(JSONObject rule) {
+        Object id = rule.get("id");
+        Object name = rule.get("name");
+        Object doorsObj = rule.get("doors");
+        String[] doors = doorsObj.toString().replaceAll("\"", "").replaceAll("\\[", "").replaceAll("]", "").split(",");
+        for (int i = 0; i < doors.length; i++) {
+            int finalI = i;
+            doorList.forEach(door -> {
+                if (door.getId().equals(doors[finalI])){
+                    door.setAccess_rules(name.toString());
+                }
+            });
         }
     }
 
@@ -140,13 +183,19 @@ public class securiTree {
         Object parent_area_id = systemData.get("parent_area");
         Object child_area_obj = systemData.get("child_area_ids");
         String[] child_area_ids = child_area_obj.toString().replaceAll("\"", "").replaceAll("\\[", "").replaceAll("]", "").split(",");
+        for (int i = 0; i < child_area_ids.length; i++) {
+            if (child_area_ids[i].equals("")){
+                child_area_ids = new String[0];
+            }
+        }
         if (parent_area_id == null) {
-            Area area = new Area(id.toString(), name.toString(), "root");
+            Area area = new Area(id.toString(), name.toString(), "root",child_area_ids);
             areaList.add(area);
         }else{
-            Area area = new Area(id.toString(), name.toString(), parent_area_id.toString());
+            Area area = new Area(id.toString(), name.toString(), parent_area_id.toString(), child_area_ids);
             areaList.add(area);
         }
+
     }
 
     public static void login() throws IOException {

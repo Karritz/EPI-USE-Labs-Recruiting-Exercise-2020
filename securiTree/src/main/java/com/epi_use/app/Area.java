@@ -5,9 +5,8 @@ public class Area {
     private String name;
     private String parent_area_id;
     private String[] child_area_ids;
-    private String[] access_rules;
 
-    public Area(String id, String name, String parent_area_id) {
+    public Area(String id, String name, String parent_area_id, String[] child_area_ids) {
         this.id = id;
         this.name = name;
         this.parent_area_id = parent_area_id;
@@ -29,11 +28,5 @@ public class Area {
     public String[] getChild_area_ids() {
         return child_area_ids;
     }
-    public String[] getAccess_rules() {
-        return access_rules;
-    }
 
-    public void setAccess_rules(String[] access_rules) {
-        this.access_rules = access_rules;
-    }
 }
