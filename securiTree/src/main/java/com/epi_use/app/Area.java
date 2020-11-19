@@ -7,7 +7,7 @@ public class Area {
     private String[] child_area_ids;
     private String[] access_rules;
 
-    public Area(String id, String name, String parent_area_id, String[] child_area_ids) {
+    public Area(String id, String name, String parent_area_id) {
         this.id = id;
         this.name = name;
         this.parent_area_id = parent_area_id;

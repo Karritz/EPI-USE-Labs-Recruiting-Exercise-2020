@@ -4,7 +4,7 @@
             {
                 "id": "6C4E2C5D-BBBB-4386-AA71-B7F56727433C",
                 "name": "Wonka Factory",
-                "parent_area_id": null,
+                "parent_area": null,
                 "child_area_ids": [
                     "CBB8569D-C331-4629-A1F7-236BFA1A2822",
                     "B8501AFC-AD8F-4EBD-B733-87D9DA6AD713"
