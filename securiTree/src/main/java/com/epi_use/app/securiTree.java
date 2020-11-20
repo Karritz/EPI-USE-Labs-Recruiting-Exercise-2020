@@ -32,7 +32,6 @@ public class securiTree {
         String resp = input();
         switch (resp){
             case "1":
-                System.out.println("the tree");
                 displayTree(areaList.get(0), 0);
                 System.out.println("press enter to go back to homepage");
                 input();
@@ -76,9 +75,19 @@ public class securiTree {
     private static void displayTree(Area root, int depth) {
         String tab = "\t";
         int index = 0;
-        System.out.println(strRepeat(tab, depth) + " " + root.getName());
-        System.out.println(strRepeat(tab, depth) + " doors");
-        System.out.println(strRepeat(tab, depth)+ " rules");
+        System.out.print(strRepeat(tab, depth)+ "[Area] ");
+        System.out.println(" " + root.getName());
+        for (int i = 0; i < doorList.size(); i++) {
+            if (doorList.get(i).getParent_area().equals(root.getId())){
+                System.out.print(strRepeat(tab, depth) + " [Door] " + doorList.get(i).getName());
+                System.out.print(" [ID] " + doorList.get(i).getId() + "\n");
+                System.out.println(strRepeat(tab, depth) + " [Status] " + doorList.get(i).getStatus());
+                System.out.println(strRepeat(tab, depth) + " [Access Rule/s]");
+                doorList.get(i).getAccess_rules().forEach(rule -> {
+                    System.out.println(strRepeat(tab, depth)+ " ->" + rule);
+                });
+            }
+        }
         if (root.getChild_area_ids().length != 0) {
             for (int i = 0; i < root.getChild_area_ids().length; i++) {
                     index = areaIndex(root.getChild_area_ids()[i]);
